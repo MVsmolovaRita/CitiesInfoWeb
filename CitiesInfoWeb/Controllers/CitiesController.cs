@@ -1,4 +1,5 @@
 ﻿using CitiesInfoWeb;
+using CitiesInfoWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityInfo.Controllers
@@ -8,16 +9,21 @@ namespace CityInfo.Controllers
     public class CitiesController:ControllerBase
     {
         [HttpGet]
-        public JsonResult GetCities()
-
+        public ActionResult<IEnumerable<City>>GetCities()
         {
-
-            return new JsonResult(
-
-                CitiesDataStore.Current.Cities
-                ) ;
+            return Ok(CitiesDataStore.Current.Cities);
         }
 
-
+        [HttpGet("{id}")]
+        public ActionResult<City> GetCity(int id)
+        {
+            
+              var CityToReturn = CitiesDataStore.Current.Cities.FirstOrDefault(x => x.Id == id);
+                if(CityToReturn==null)
+            {
+                return NotFound();
+            }
+            return Ok(CityToReturn);    
+        }
     }
 }
